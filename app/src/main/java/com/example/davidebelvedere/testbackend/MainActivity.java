@@ -23,23 +23,27 @@ public class MainActivity extends AppCompatActivity {
         final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
         dialog.setMessage("Loading..");
         dialog.show();
-        JsonObjectRequest jsonObjectReq = new JsonObjectRequest("https://androidtutorialpoint.com/api/volleyJsonObject", null,
-                new Response.Listener<JSONObject>() {
+        GsonRequest jsonObjectReq = new GsonRequest("https://androidtutorialpoint.com/api/volleyJsonObject", DeviceOutput.class, null,
+                new Response.Listener<DeviceOutput>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        TextView textView = (TextView) findViewById(R.id.jsonResponse);
-                        textView.setText(response.toString());
+                    public void onResponse(DeviceOutput response) {
+                        TextView screenView = (TextView) findViewById(R.id.screenSize);
+                        TextView nameView = (TextView) findViewById(R.id.name);
+                        TextView osView = (TextView) findViewById(R.id.OS);
+
+                        screenView.setText(response.getScreenSize());
+                        nameView.setText(response.getName());
+                        osView.setText(response.getOperatingSystem());
                         dialog.hide();
+
                     }
+
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("VOLLEY", "Error: " + error.getMessage());
-                dialog.hide();
+
             }
         });
-// Access the RequestQueue through your singleton class.
         ServiceQueueSingleton.getInstance(this).addToRequestQueue(jsonObjectReq);
-      
     }
 }
